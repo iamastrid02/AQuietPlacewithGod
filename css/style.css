@@ -91,3 +91,16 @@ html.dark h3,html.dark .item h4,html.dark .lbl{color:#ffb3cf}
 html.dark footer,html.dark p{color:#f3d9e4}
 html.dark .mini,html.dark .link{background:#4a2c3b;color:#ffd1e2}
 html.dark .userbar{background:#382430;color:#f3d9e4}
+
+/* Drawer-style entries */
+.item summary{cursor:pointer;list-style:none}
+.item summary::-webkit-details-marker{display:none}
+.item summary h4::before{content:'▸ '}
+.item[open] summary h4::before{content:'▾ '}
+.item .peek{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:14px;opacity:.85}
+.item[open] .peek{display:none}
+.item .full{margin-top:6px}
+#list-bible,#list-calendar,#list-notes,#list-prayers,#list-prayers-done{max-height:460px;overflow-y:auto}
+
+.lockbox .note{font-size:13px;margin:6px 0 0}
+.lockbox .action{margin:4px 0}
