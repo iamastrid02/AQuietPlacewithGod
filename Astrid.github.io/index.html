@@ -1,1 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A Quiet Place with God</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap');
+:root{--pink:#f58ab3;--deep:#c94f80;--light:#ffe0ec;--pale:#fff4f8;--ink:#85465f}
+*{box-sizing:border-box}
+body{margin:0;padding:25px 12px;color:var(--ink);font-family:'Quicksand',sans-serif;background-color:#fff0f6;
+background-image:linear-gradient(45deg,#fbd9e7 25%,transparent 25%),linear-gradient(-45deg,#fbd9e7 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#fbd9e7 75%),linear-gradient(-45deg,transparent 75%,#fbd9e7 75%);
+background-size:48px 48px;background-position:0 0,0 24px,24px -24px,-24px 0}
+.site{max-width:900px;margin:auto;overflow:hidden;background:#f9a8c8;border:4px dashed #df6e9b;border-radius:25px;box-shadow:0 8px 25px #b9577a30}
+header{min-height:220px;display:grid;place-items:center;text-align:center;padding:25px 12px;background:repeating-linear-gradient(90deg,#fff 0 55px,#f77eaa 55px 110px)}
+.logo{font:700 clamp(30px,6vw,54px) 'Fredoka',sans-serif;color:#f47da9;-webkit-text-stroke:1.5px white;text-shadow:3px 4px #b94776;background:#fff0f6e8;border:3px solid #f18bb2;border-radius:28px;padding:12px 20px;transform:rotate(-2deg)}
+header p{font:600 15px 'Fredoka',sans-serif;color:#bd4e7c;text-shadow:1px 1px white}
+nav{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;padding:12px 8px 18px;background:#f9a8c8}
+.nav-item{border:0;padding:4px 2px;background:transparent;color:white;cursor:pointer;font:700 clamp(11px,2vw,17px) 'Fredoka',sans-serif;text-shadow:2px 2px #cb5985,-1px -1px #cb5985}
+.nav-item svg{display:block;width:min(100%,82px);height:83px;margin:5px auto 0;filter:drop-shadow(2px 3px 0 #b64e77);transition:transform .2s}
+.nav-item:hover svg,.nav-item.active svg{transform:translateY(-5px) rotate(-3deg)}
+.nav-item.active{color:#fff8fb}
+main{margin:0 14px;padding:18px;min-height:400px;background:white;border-radius:18px}
+.page{display:none;animation:appear .25s ease}
+.page.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+h2{font:700 23px 'Fredoka',sans-serif;text-align:center;color:white;background:var(--pink);border-radius:14px;padding:10px;margin:0 0 15px;text-shadow:1px 2px #c85b84}
+h3{font:700 18px 'Fredoka',sans-serif;color:#d65e8e}
+p{line-height:1.7}
+.panel{padding:18px;margin:12px 0;background:#fff5f9;border:2px solid #f7c1d5;border-radius:15px}
+.center{text-align:center}
+input,textarea,select{display:block;width:100%;margin:8px 0 13px;padding:12px;border:2px solid #f4bad0;border-radius:12px;background:white;color:var(--ink);font:500 14px 'Quicksand',sans-serif}
+textarea{min-height:95px;resize:vertical}
+button.action{background:var(--pink);color:white;border:0;padding:11px 18px;border-radius:20px;font:700 14px 'Fredoka',sans-serif;cursor:pointer}
+button.action:hover{background:var(--deep)}
+.home-welcome{padding:30px 15px;text-align:center;border-radius:16px;background:#fff1f7}
+.home-welcome .flower{font-size:35px}
+footer{padding:20px 8px;text-align:center;font:600 13px 'Fredoka',sans-serif;color:#9d4268}
+.item{background:white;border:2px solid #f7c1d5;border-radius:12px;padding:10px 14px;margin:9px 0}
+.item h4{margin:0 0 4px;font:600 16px 'Fredoka',sans-serif;color:#d65e8e;word-break:break-word}
+.item h4 a{color:inherit}
+.item p{margin:0;white-space:pre-wrap;line-height:1.5;word-break:break-word}
+.item.done{background:#fff0f6}
+.item.done h4::after{content:" ♡ done";font-size:13px}
+.item.done p{opacity:.65;text-decoration:line-through}
+.row{display:flex;gap:6px;margin-top:8px}
+.mini{border:0;background:#fbd9e7;color:#a8466f;border-radius:12px;padding:4px 11px;font:600 12px 'Fredoka',sans-serif;cursor:pointer}
+.mini:hover{background:#f7c1d5}
+.empty{text-align:center;opacity:.7;margin:10px 0 0}
+.msg{color:#c34f80;font:600 13px 'Fredoka',sans-serif;margin:8px 0 0;min-height:1em}
+@media(max-width:560px){body{padding:8px 4px}header{min-height:170px}nav{grid-template-columns:repeat(3,1fr)}.nav-item svg{height:65px}main{margin:0 8px;padding:12px}}
+</style>
+</head>
+<body>
+<div class="site">
+<header>
+  <div>
+    <div class="logo">♡ A Quiet Place ♡</div>
+    <p>✿ WITH GOD · A LITTLE SPACE FOR YOUR SOUL ✿</p>
+  </div>
+</header>
 
+<nav>
+  <button class="nav-item active" onclick="showPage('home',this)">
+    Home
+    <svg viewBox="0 0 100 90">
+      <rect x="12" y="29" width="76" height="55" rx="5" fill="#ffb6d0" stroke="#8d4561" stroke-width="3"/>
+      <path d="M8 30 L50 5 L92 30Z" fill="#fff" stroke="#8d4561" stroke-width="3"/>
+      <path d="M12 28 H88 V43 Q75 56 62 43 Q50 56 38 43 Q25 56 12 43Z" fill="#fff" stroke="#8d4561" stroke-width="3"/>
+      <path d="M12 29 H28 V46 Q12 53 12 40Z M44 29 H60 V46 Q44 53 44 40Z M76 29 H88 V40 Q76 53 76 46Z" fill="#f47fa9"/>
+      <rect x="22" y="56" width="20" height="28" rx="3" fill="#fff" stroke="#8d4561" stroke-width="3"/>
+      <circle cx="36" cy="69" r="2" fill="#8d4561"/>
+      <rect x="54" y="55" width="24" height="17" fill="#fff" stroke="#8d4561" stroke-width="3"/>
+    </svg>
+  </button>
+  <button class="nav-item" onclick="showPage('bible',this)">
+    Bible Study
+    <svg viewBox="0 0 100 90">
+      <path d="M12 20 Q30 5 48 24 L50 80 Q30 63 12 77Z" fill="#fff1f6" stroke="#8d4561" stroke-width="3"/>
+      <path d="M50 24 Q70 5 88 20 L88 77 Q68 63 50 80Z" fill="#ffb5d0" stroke="#8d4561" stroke-width="3"/>
+      <path d="M50 24 V80" stroke="#8d4561" stroke-width="3"/>
+      <path d="M34 10 V33 M23 21 H45" stroke="#e86e9d" stroke-width="5" stroke-linecap="round"/>
+      <path d="M65 35 H79 M65 44 H79 M65 53 H79" stroke="#d66b91" stroke-width="2"/>
+    </svg>
+  </button>
+  <button class="nav-item" onclick="showPage('calendar',this)">
+    Schedule
+    <svg viewBox="0 0 100 90">
+      <rect x="10" y="18" width="80" height="65" rx="7" fill="#fff0f6" stroke="#8d4561" stroke-width="3"/>
+      <rect x="10" y="18" width="80" height="18" rx="5" fill="#f58ab3"/>
+      <path d="M28 9 V27 M50 9 V27 M72 9 V27" stroke="#8d4561" stroke-width="5" stroke-linecap="round"/>
+      <g fill="#f5a9c5">
+        <rect x="20" y="44" width="12" height="10"/><rect x="39" y="44" width="12" height="10"/><rect x="58" y="44" width="12" height="10"/>
+        <rect x="20" y="61" width="12" height="10"/><rect x="39" y="61" width="12" height="10"/><rect x="58" y="61" width="12" height="10"/>
+      </g>
+    </svg>
+  </button>
+  <button class="nav-item" onclick="showPage('prayers',this)">
+    Prayers
+    <svg viewBox="0 0 100 90">
+      <path d="M50 80 C8 55 5 30 25 19 C38 11 48 23 50 31 C59 12 81 13 89 30 C99 52 70 72 50 80Z" fill="#ffb9d2" stroke="#8d4561" stroke-width="3"/>
+      <path d="M39 43 Q50 25 61 43 Q50 60 39 43Z" fill="#fff2f7" stroke="#8d4561" stroke-width="2"/>
+      <path d="M50 39 V54 M43 46 H57" stroke="#d65c8c" stroke-width="2"/>
+    </svg>
+  </button>
+  <button class="nav-item" onclick="showPage('worship',this)">
+    Worship
+    <svg viewBox="0 0 100 90">
+      <path d="M20 65 V22 Q20 12 30 15 L79 26 V66" fill="#fff1f6" stroke="#8d4561" stroke-width="4"/>
+      <circle cx="18" cy="69" r="11" fill="#f58ab3" stroke="#8d4561" stroke-width="3"/>
+      <circle cx="77" cy="72" r="11" fill="#f58ab3" stroke="#8d4561" stroke-width="3"/>
+      <path d="M30 15 V37 L79 48" stroke="#8d4561" stroke-width="3" fill="none"/>
+      <path d="M43 6 L48 0 M61 10 L67 4" stroke="#e875a0" stroke-width="3"/>
+    </svg>
+  </button>
+  <button class="nav-item" onclick="showPage('notes',this)">
+    My Notes
+    <svg viewBox="0 0 100 90">
+      <rect x="20" y="10" width="60" height="73" rx="6" fill="#fff" stroke="#8d4561" stroke-width="3" transform="rotate(-5 50 45)"/>
+      <path d="M34 30 H69 M33 43 H69 M32 56 H61" stroke="#e77ba4" stroke-width="3" stroke-linecap="round"/>
+      <path d="M75 9 L87 19 L52 69 L40 72 L42 60Z" fill="#f7a8c6" stroke="#8d4561" stroke-width="3"/>
+    </svg>
+  </button>
+</nav>
+
+<main>
+  <section class="page active" id="home">
+    <div class="home-welcome">
+      <div class="flower">🌷 🐈 🌷</div>
+      <h2>Welcome, dear heart ♡</h2>
+      <p>A quiet little corner to spend time with God.</p>
+      <p>Take a breath. Be still. Let your heart rest in Him.</p>
+      <p>♡ One day at a time, one prayer at a time. ♡</p>
+    </div>
+    <div class="panel center">
+      <h3>Today's little reminder</h3>
+      <p id="verse" style="margin:0">"Draw nigh to God, and he will draw nigh to you."</p>
+      <p id="vref" style="margin:4px 0 12px;font-size:13px">James 4:8 (KJV)</p>
+      <button class="action" onclick="nextVerse()">Another verse ♡</button>
+    </div>
+  </section>
+
+  <section class="page" id="bible">
+    <h2>📖 Bible Study Corner</h2>
+    <div class="panel">
+      <h3>Today's Reading</h3>
+      <input id="bible1" placeholder="Example: Psalm 23">
+      <textarea id="bible2" placeholder="Write your thoughts about today's passage..."></textarea>
+      <button class="action" onclick="add('bible')">Save Study ♡</button>
+      <p class="msg" id="msg-bible"></p>
+    </div>
+    <div id="list-bible"></div>
+  </section>
+
+  <section class="page" id="calendar">
+    <h2>🗓 My Devotion Schedule</h2>
+    <div class="panel">
+      <h3>My reading plan</h3>
+      <input id="calendar1" type="date">
+      <input id="calendar2" placeholder="Today's Bible reading">
+      <textarea id="calendar3" placeholder="What would you like to study?"></textarea>
+      <button class="action" onclick="add('calendar')">Add to Schedule ♡</button>
+      <p class="msg" id="msg-calendar"></p>
+    </div>
+    <div id="list-calendar"></div>
+  </section>
+
+  <section class="page" id="prayers">
+    <h2>🙏 My Prayer Journal</h2>
+    <div class="panel">
+      <h3>Prayer Requests</h3>
+      <textarea id="prayers1" placeholder="Dear God..."></textarea>
+      <button class="action" onclick="add('prayers')">Save Prayer ♡</button>
+      <p class="msg" id="msg-prayers"></p>
+    </div>
+    <h3>Prayer Requests</h3>
+    <div id="list-prayers"></div>
+    <h3>Answered Prayers ♡</h3>
+    <div id="list-prayers-done"></div>
+  </section>
+
+  <section class="page" id="worship">
+    <h2>🎵 Worship Corner</h2>
+    <div class="panel center">
+      <h3>Songs for a quiet moment</h3>
+      <p>♡ Your favorite praise and worship songs ♡</p>
+      <input id="worship1" placeholder="Song or playlist name">
+      <input id="worship2" placeholder="Paste your playlist link here (https://...)">
+      <button class="action" onclick="add('worship')">Add Playlist</button>
+      <p class="msg" id="msg-worship"></p>
+    </div>
+    <div id="list-worship"></div>
+  </section>
+
+  <section class="page" id="notes">
+    <h2>📝 My Personal Notes</h2>
+    <div class="panel">
+      <h3>A little space for your thoughts</h3>
+      <input id="notes1" placeholder="Note title">
+      <textarea id="notes2" placeholder="Write anything on your heart..."></textarea>
+      <button class="action" onclick="add('notes')">Save Note ♡</button>
+      <p class="msg" id="msg-notes"></p>
+    </div>
+    <div id="list-notes"></div>
+  </section>
+</main>
+<footer>Made with ♡, faith, and a little bit of pink 🌸</footer>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+function showPage(page, button) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  $(page).classList.add('active');
+  button.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// Daily verses (KJV, public domain)
+const VERSES = [
+  ["Draw nigh to God, and he will draw nigh to you.", "James 4:8 (KJV)"],
+  ["Be still, and know that I am God.", "Psalm 46:10 (KJV)"],
+  ["The Lord is my shepherd; I shall not want.", "Psalm 23:1 (KJV)"],
+  ["Casting all your care upon him; for he careth for you.", "1 Peter 5:7 (KJV)"],
+  ["Trust in the Lord with all thine heart.", "Proverbs 3:5 (KJV)"],
+  ["Come unto me, all ye that labour and are heavy laden, and I will give you rest.", "Matthew 11:28 (KJV)"]
+];
+let vi = 0;
+function nextVerse() {
+  vi = (vi + 1) % VERSES.length;
+  $('verse').textContent = '"' + VERSES[vi][0] + '"';
+  $('vref').textContent = VERSES[vi][1];
+}
+
+// Saved entries (stored in this browser only)
+const FIELDS = {bible:2, calendar:3, prayers:1, worship:2, notes:2};
+const load = k => { try { return JSON.parse(localStorage.getItem('qp_' + k)) || []; } catch (e) { return []; } };
+const save = (k, v) => { try { localStorage.setItem('qp_' + k, JSON.stringify(v)); return true; } catch (e) { return false; } };
+
+function add(k) {
+  const v = [];
+  for (let i = 1; i <= FIELDS[k]; i++) v.push($(k + i).value.trim());
+  const msg = $('msg-' + k);
+  if (k === 'worship' && !/^https?:\/\//i.test(v[1])) { msg.textContent = 'Please paste a link that starts with https://'; return; }
+  if (!v.some(Boolean)) { msg.textContent = 'Write something first ♡'; return; }
+  const items = load(k);
+  items.unshift({v, done:false, id:Date.now()});
+  if (!save(k, items)) { msg.textContent = "Couldn't save in this browser."; return; }
+  for (let i = 1; i <= FIELDS[k]; i++) $(k + i).value = '';
+  msg.textContent = 'Saved ♡';
+  render(k);
+}
+function toggle(k, id) { const a = load(k); const it = a.find(x => x.id === id); if (it) it.done = !it.done; save(k, a); render(k); }
+function remove(k, id) { if (confirm('Delete this entry?')) { save(k, load(k).filter(x => x.id !== id)); render(k); } }
+
+function card(k, it) {
+  const [a, b, c] = it.v;
+  const d = document.createElement('div');
+  d.className = 'item' + (it.done ? ' done' : '');
+  const h = document.createElement('h4'), p = document.createElement('p');
+  if (k === 'bible') { h.textContent = a || 'Untitled'; p.textContent = b; }
+  else if (k === 'calendar') { h.textContent = (b || 'Reading') + (a ? ' · ' + a : ''); p.textContent = c; }
+  else if (k === 'prayers') { h.textContent = '🙏'; p.textContent = a; }
+  else if (k === 'notes') { h.textContent = a || 'Untitled'; p.textContent = b; }
+  else {
+    const l = document.createElement('a');
+    l.href = b; l.target = '_blank'; l.rel = 'noopener noreferrer'; l.textContent = '♪ ' + (a || b);
+    h.appendChild(l);
+  }
+  d.appendChild(h);
+  if (p.textContent) d.appendChild(p);
+  const r = document.createElement('div'); r.className = 'row';
+  if (k === 'calendar' || k === 'prayers') {
+    const t = document.createElement('button'); t.className = 'mini';
+    t.textContent = k === 'prayers' ? (it.done ? 'Back to requests' : '✓ Answered') : (it.done ? 'Undo' : '✓ Done');
+    t.onclick = () => toggle(k, it.id); r.appendChild(t);
+  }
+  const x = document.createElement('button'); x.className = 'mini'; x.textContent = 'Delete';
+  x.onclick = () => remove(k, it.id); r.appendChild(x);
+  d.appendChild(r);
+  return d;
+}
+function fill(el, items, k, empty) {
+  el.textContent = '';
+  if (!items.length) { const e = document.createElement('p'); e.className = 'empty'; e.textContent = empty; el.appendChild(e); }
+  items.forEach(it => el.appendChild(card(k, it)));
+}
+function render(k) {
+  let items = load(k);
+  if (k === 'calendar') items.sort((a, b) => (a.v[0] || '9999').localeCompare(b.v[0] || '9999'));
+  if (k === 'prayers') {
+    fill($('list-prayers'), items.filter(i => !i.done), k, 'No prayer requests yet ♡');
+    fill($('list-prayers-done'), items.filter(i => i.done), k, 'Answered prayers will appear here ♡');
+  } else fill($('list-' + k), items, k, 'Nothing saved yet ♡');
+}
+Object.keys(FIELDS).forEach(render);
+</script>
+</body>
+</html>
