@@ -7,24 +7,34 @@
 <meta name="description" content="A quiet little corner to spend time with God.">
 <meta name="theme-color" content="#f9a8c8">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌷</text></svg>">
-<script>try{if(localStorage.getItem('qp_pass'))document.documentElement.classList.add('locked')}catch(e){}</script>
+<script>try{var s=sessionStorage.getItem('qp_session'),u=JSON.parse(localStorage.getItem('qp_users')||'[]'),l=localStorage.getItem('qp_last'),f=u.filter(function(x){return x.name===l})[0];if(!s&&!(f&&!f.h))document.documentElement.classList.add('locked')}catch(e){document.documentElement.classList.add('locked')}</script>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div id="lock">
   <div class="lockbox">
     <div style="font-size:35px">🌷</div>
-    <h2>Welcome back ♡</h2>
-    <input id="lockpass" type="password" placeholder="Passcode" autocomplete="current-password" onkeydown="if(event.key==='Enter')unlock()">
-    <button class="action" onclick="unlock()">Open ♡</button>
+    <h2 id="lock-title">Welcome ♡</h2>
+    <div id="login-form">
+      <select id="lock-user" onchange="loginChange()"></select>
+      <input id="lockpass" type="password" placeholder="Passcode" autocomplete="current-password" onkeydown="if(event.key==='Enter')unlock()">
+      <button class="action" onclick="unlock()">Open ♡</button>
+      <p><button class="link" onclick="showCreate()">New here? Create a profile</button></p>
+    </div>
+    <div id="create-form" hidden>
+      <input id="new-name" placeholder="Choose a username" maxlength="20" autocomplete="username">
+      <input id="new-pass" type="password" placeholder="Passcode (optional)" autocomplete="new-password" onkeydown="if(event.key==='Enter')createProfile()">
+      <button class="action" onclick="createProfile()">Create profile ♡</button>
+      <p id="have-profile"><button class="link" onclick="showLogin()">I already have a profile</button></p>
+    </div>
     <p class="msg" id="msg-lock"></p>
   </div>
 </div>
 <div class="site">
 <header>
   <div>
-    <div class="logo">♡ A Quiet Place ♡</div>
-    <p>✿ WITH GOD · A LITTLE SPACE FOR YOUR SOUL ✿</p>
+    <div class="logo">♡ A Quiet Place ♡<span class="with">with God</span></div>
+    <p>✿ A LITTLE SPACE FOR YOUR SOUL ✿</p>
   </div>
 </header>
 
@@ -89,13 +99,28 @@
       <path d="M75 9 L87 19 L52 69 L40 72 L42 60Z" fill="#f7a8c6" stroke="#8d4561" stroke-width="3"/>
     </svg>
   </button>
+  <button class="nav-item" onclick="showPage('settings',this)">
+    Settings
+    <svg viewBox="0 0 100 90">
+      <g transform="translate(50 47)" stroke="#8d4561" stroke-width="3">
+        <g fill="#f58ab3">
+          <rect x="-7" y="-36" width="14" height="72" rx="4"/>
+          <rect x="-7" y="-36" width="14" height="72" rx="4" transform="rotate(45)"/>
+          <rect x="-7" y="-36" width="14" height="72" rx="4" transform="rotate(90)"/>
+          <rect x="-7" y="-36" width="14" height="72" rx="4" transform="rotate(135)"/>
+        </g>
+        <circle r="26" fill="#ffb5d0"/>
+        <circle r="10" fill="#fff"/>
+      </g>
+    </svg>
+  </button>
 </nav>
 
 <main>
   <section class="page active" id="home">
     <div class="home-welcome">
       <div class="flower">🌷 🐈 🌷</div>
-      <h2>Welcome, dear heart ♡</h2>
+      <h2 id="welcome">Welcome, dear heart ♡</h2>
       <p>A quiet little corner to spend time with God.</p>
       <p>Take a breath. Be still. Let your heart rest in Him.</p>
       <p>♡ One day at a time, one prayer at a time. ♡</p>
@@ -105,22 +130,7 @@
       <p id="verse" style="margin:0">"Draw nigh to God, and he will draw nigh to you."</p>
       <p id="vref" style="margin:4px 0 12px;font-size:13px">James 4:8 (KJV)</p>
       <button class="action" onclick="nextVerse()">Another verse ♡</button>
-    </div>
-    <div class="panel center">
-      <h3>Keep your entries safe</h3>
-      <p>Your journal is saved in this browser only. Download a backup now and then.</p>
-      <button class="action" onclick="exportData()">Download backup</button>
-      <button class="action" onclick="$('restore').click()">Restore backup</button>
-      <input type="file" id="restore" accept=".json" hidden onchange="importData(this)">
-      <p class="msg" id="msg-data"></p>
-    </div>
-    <div class="panel center">
-      <h3>Passcode</h3>
-      <p id="lock-status"></p>
-      <input id="pass1" type="password" placeholder="New passcode" autocomplete="new-password">
-      <button class="action" onclick="setPass()">Set passcode</button>
-      <button class="action" id="rm-pass" onclick="removePass()" hidden>Remove passcode</button>
-      <p class="msg" id="msg-pass"></p>
+      <a id="vlink" class="mini" href="#" target="_blank" rel="noopener noreferrer" hidden></a>
     </div>
   </section>
 
@@ -131,6 +141,7 @@
       <input id="bible1" placeholder="Example: Psalm 23">
       <textarea id="bible2" placeholder="Write your thoughts about today's passage..."></textarea>
       <button class="action" onclick="add('bible')">Save Study ♡</button>
+      <button class="action" id="read-btn" onclick="readPassage()">Read passage ♡</button>
       <p class="msg" id="msg-bible"></p>
     </div>
     <div id="list-bible"></div>
@@ -186,6 +197,40 @@
       <p class="msg" id="msg-notes"></p>
     </div>
     <div id="list-notes"></div>
+  </section>
+  <section class="page" id="settings">
+    <h2>⚙️ Settings</h2>
+    <div class="panel">
+      <h3>Profile</h3>
+      <p>Signed in as <b id="set-name"></b></p>
+      <button class="action" onclick="logout()">Log out / switch user</button>
+      <button class="mini" onclick="deleteProfile()">Delete this profile</button>
+    </div>
+    <div class="panel">
+      <h3>Passcode</h3>
+      <p id="lock-status"></p>
+      <input id="pass1" type="password" placeholder="New passcode (4+ characters)" autocomplete="new-password">
+      <button class="action" id="set-pass-btn" onclick="setPass()">Set passcode</button>
+      <button class="mini" id="rm-pass" onclick="removePass()" hidden>Remove passcode</button>
+      <p class="msg" id="msg-pass"></p>
+    </div>
+    <div class="panel">
+      <h3>Bible version</h3>
+      <select id="ver" onchange="setVersion(this.value)">
+        <option value="KJV">KJV (shows the verse text)</option>
+        <option value="NIV">NIV (opens the passage to read)</option>
+      </select>
+      <p style="font-size:13px;margin:0">The NIV is copyrighted, so with NIV the site shows the reference and opens the passage on BibleGateway.</p>
+    </div>
+    <div class="panel">
+      <h3>Backup</h3>
+      <p>Your entries live in this browser only. Download a backup now and then.</p>
+      <button class="action" onclick="exportData()">Download backup</button>
+      <button class="action" onclick="$('restore').click()">Restore backup</button>
+      <input type="file" id="restore" accept=".json" hidden onchange="importData(this)">
+      <p class="msg" id="msg-data"></p>
+      <p id="storage-info" style="font-size:13px;margin:0"></p>
+    </div>
   </section>
 </main>
 <footer>Made with ♡, faith, and a little bit of pink 🌸</footer>
