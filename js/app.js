@@ -132,23 +132,32 @@ function answerForm(r, k, id) {
 }
 
 function card(k, it) {
-  const [a, b, c] = it.v;
-  const d = document.createElement('div');
+  const [a, b, c] = it.v, w = k === 'worship';
+  const d = document.createElement(w ? 'div' : 'details');
   d.className = 'item' + (it.done ? ' done' : '');
-  const h = document.createElement('h4'), p = document.createElement('p');
-  if (k === 'bible' || k === 'notes') { h.textContent = a || 'Untitled'; p.textContent = b; }
-  else if (k === 'calendar') { h.textContent = (b || 'Devotion') + (a ? ' · ' + fmt(a) : ''); p.textContent = c; }
+  const h = document.createElement('h4');
+  let text = '';
+  if (k === 'bible' || k === 'notes') { h.textContent = a || 'Untitled'; text = b; }
+  else if (k === 'calendar') { h.textContent = (b || 'Devotion') + (a ? ' · ' + fmt(a) : ''); text = c; }
   else if (k === 'prayers') {
     h.textContent = '🙏 Requested' + (b ? ' ' + fmt(b) : '') + (it.done ? ' · ✓ Answered ' + fmt(it.ad) : '');
-    p.textContent = a;
+    text = a;
   } else {
     const l = document.createElement('a');
     l.href = b; l.target = '_blank'; l.rel = 'noopener noreferrer'; l.textContent = '♪ ' + (a || b);
     h.appendChild(l);
   }
-  d.appendChild(h);
-  if (p.textContent) d.appendChild(p);
-  if (k === 'worship') {
+  if (w) d.appendChild(h);
+  else { // drawer: title + short preview; click to open the full text
+    const s = document.createElement('summary');
+    s.appendChild(h);
+    if (text) {
+      const pk = document.createElement('p'); pk.className = 'peek'; pk.textContent = text; s.appendChild(pk);
+      const f = document.createElement('p'); f.className = 'full'; f.textContent = text;
+      d.appendChild(s); d.appendChild(f);
+    } else d.appendChild(s);
+  }
+  if (w) {
     const sp = spotify(b);
     if (sp) {
       const f = document.createElement('iframe');
@@ -250,14 +259,14 @@ function deleteProfile() {
 
 // ---- Backup and restore (current account) ----
 function exportData() {
-  const data = {};
+  const data = {}, u = me();
   Object.keys(FIELDS).forEach(k => data[k] = load(k));
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([JSON.stringify({app:'quiet-place', data})], {type:'application/json'}));
-  a.download = 'quiet-place-' + me().name.replace(/\W+/g, '-') + '-' + today() + '.json';
+  a.href = URL.createObjectURL(new Blob([JSON.stringify({app:'quiet-place', v:2, account:{id:idOf(u), name:u.name, display:u.display || u.name, h:u.h || null}, data, theme:theme(), version:version()})], {type:'application/json'}));
+  a.download = 'quiet-place-' + u.name.replace(/\W+/g, '-') + '-' + today() + '.json';
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-  $('msg-data').textContent = 'Backup downloaded ♡';
+  $('msg-data').textContent = 'Backup downloaded ♡ Keep the file private.';
 }
 function importData(input) {
   const f = input.files[0];
@@ -290,19 +299,22 @@ function startSession(id) {
   showVerse();
   if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
 }
-function showLogin() {
+function screen(n) {
   document.documentElement.classList.add('locked');
+  ['start', 'login', 'create'].forEach(s => { $(s + '-form').hidden = s !== n; });
+  $('msg-lock').textContent = '';
+}
+function showStart() { screen('start'); $('lock-title').textContent = 'Welcome ♡'; }
+function showLogin(pick) {
   const us = users();
-  if (!us.length) { showCreate(); return; }
+  if (!us.length) { showStart(); return; }
+  screen('login');
   const sel = $('lock-user');
   sel.textContent = '';
   us.forEach(u => { const o = document.createElement('option'); o.value = idOf(u); o.textContent = u.name; sel.appendChild(o); });
-  const last = LS.get('qp_last');
-  if (last && us.some(u => idOf(u) === last)) sel.value = last;
-  $('login-form').hidden = false;
-  $('create-form').hidden = true;
+  const want = pick || LS.get('qp_last');
+  if (want && us.some(u => idOf(u) === want)) sel.value = want;
   $('lock-title').textContent = 'Welcome back ♡';
-  $('msg-lock').textContent = '';
   loginChange();
 }
 function loginChange() {
@@ -310,12 +322,31 @@ function loginChange() {
   $('lockpass').hidden = !(u && u.h);
   $('lockpass').value = '';
 }
-function showCreate() {
-  $('login-form').hidden = true;
-  $('create-form').hidden = false;
-  $('lock-title').textContent = users().length ? 'New account ♡' : 'Welcome ♡';
-  $('have-profile').hidden = !users().length;
-  $('msg-lock').textContent = '';
+function showCreate() { screen('create'); $('lock-title').textContent = 'New account ♡'; }
+function pickBackup() { $('acct-file').click(); }
+function importAccount(input) {
+  const f = input.files[0], m = $('msg-lock');
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const d = JSON.parse(r.result), a = d.account;
+      if (d.app !== 'quiet-place' || !a || !a.id || !a.name || !d.data) throw 0;
+      const same = users().find(u => idOf(u) === a.id);
+      if (!same && byName(a.name)) { m.textContent = 'The username "' + a.name + '" is already used on this browser.'; return; }
+      if (same && !confirm('This account is already here. Replace its entries with the ones in the file?')) return;
+      saveUsers(users().filter(u => idOf(u) !== a.id).concat({id:a.id, name:a.name, display:a.display || a.name, h:a.h || null}));
+      const prev = uid; uid = a.id;
+      Object.keys(FIELDS).forEach(k => { if (Array.isArray(d.data[k])) save(k, d.data[k]); });
+      if (d.theme) LS.set(key('theme'), JSON.stringify(d.theme));
+      if (d.version) LS.set(key('version'), d.version);
+      uid = prev;
+      showLogin(a.id);
+      m.textContent = 'Account found ♡ Enter your passcode to log in.';
+    } catch (e) { m.textContent = "That doesn't look like a Quiet Place backup file."; }
+    input.value = '';
+  };
+  r.readAsText(f);
 }
 async function unlock() {
   const u = users().find(x => idOf(x) === $('lock-user').value), m = $('msg-lock');
@@ -346,7 +377,7 @@ async function createProfile() {
 }
 function boot() {
   const sw = $('swatches');
-  if (!sw.children.length) ['#f58ab3', '#b79cf0', '#6fb7f2', '#62cfa0', '#f4a261', '#e86a6a'].forEach(c => {
+  if (!sw.children.length) ['#f58ab3', '#b79cf0', '#6fb7f2', '#a8d93f', '#f4a261', '#e86a6a'].forEach(c => {
     const b = document.createElement('button'); b.style.background = c; b.title = c; b.onclick = () => setTheme(c); sw.appendChild(b);
   });
   const last = LS.get('qp_last'), u = last && users().find(x => idOf(x) === last || x.name === last);
