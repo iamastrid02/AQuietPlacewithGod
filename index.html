@@ -7,8 +7,9 @@
 <meta name="description" content="A quiet little corner to spend time with God.">
 <meta name="theme-color" content="#f9a8c8">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌷</text></svg>">
-<script>try{var s=sessionStorage.getItem('qp_session'),u=JSON.parse(localStorage.getItem('qp_users')||'[]'),l=localStorage.getItem('qp_last'),f=u.filter(function(x){return x.name===l})[0];if(!s&&!(f&&!f.h))document.documentElement.classList.add('locked')}catch(e){document.documentElement.classList.add('locked')}</script>
-<link rel="stylesheet" href="css/style.css">
+<script>function applyTheme(t){try{t=t||{};var c=t.c||'#f58ab3',r=parseInt(c.substr(1,2),16)/255,g=parseInt(c.substr(3,2),16)/255,b=parseInt(c.substr(5,2),16)/255,x=Math.max(r,g,b),n=Math.min(r,g,b),d=x-n,h=0;if(d){h=x==r?((g-b)/d)%6:x==g?(b-r)/d+2:(r-g)/d+4;h*=60;if(h<0)h+=360}var l=(x+n)/2,s=d?d/(1-Math.abs(2*l-1)):0,e=document.documentElement;e.style.filter=c.toLowerCase()=='#f58ab3'?'':'hue-rotate('+Math.round(h-337)+'deg) saturate('+Math.min(1.3,Math.max(.15,s/.84)).toFixed(2)+')';e.classList.toggle('dark',!!t.dark)}catch(z){}}
+try{if(!localStorage.getItem('qp_last'))document.documentElement.classList.add('locked');applyTheme(JSON.parse(localStorage.getItem('qp_theme')||'null'))}catch(e){document.documentElement.classList.add('locked')}</script>
+<link rel="stylesheet" href="css/style.css?v=3">
 </head>
 <body>
 <div id="lock">
@@ -18,14 +19,15 @@
     <div id="login-form">
       <select id="lock-user" onchange="loginChange()"></select>
       <input id="lockpass" type="password" placeholder="Passcode" autocomplete="current-password" onkeydown="if(event.key==='Enter')unlock()">
-      <button class="action" onclick="unlock()">Open ♡</button>
-      <p><button class="link" onclick="showCreate()">New here? Create a profile</button></p>
+      <button class="action" onclick="unlock()">Log in ♡</button>
+      <p><button class="link" onclick="showCreate()">New here? Create an account</button></p>
     </div>
     <div id="create-form" hidden>
-      <input id="new-name" placeholder="Choose a username" maxlength="20" autocomplete="username">
-      <input id="new-pass" type="password" placeholder="Passcode (optional)" autocomplete="new-password" onkeydown="if(event.key==='Enter')createProfile()">
-      <button class="action" onclick="createProfile()">Create profile ♡</button>
-      <p id="have-profile"><button class="link" onclick="showLogin()">I already have a profile</button></p>
+      <input id="new-display" placeholder="Your name (shown in the site)" maxlength="30" autocomplete="off">
+      <input id="new-name" placeholder="Choose a username" maxlength="20" autocomplete="off">
+      <input id="new-pass" type="password" placeholder="Passcode (4+ characters)" autocomplete="new-password" onkeydown="if(event.key==='Enter')createProfile()">
+      <button class="action" onclick="createProfile()">Create account ♡</button>
+      <p id="have-profile"><button class="link" onclick="showLogin()">I already have an account</button></p>
     </div>
     <p class="msg" id="msg-lock"></p>
   </div>
@@ -33,10 +35,11 @@
 <div class="site">
 <header>
   <div>
-    <div class="logo">♡ A Quiet Place with God ♡</span></div>
+    <div class="logo">♡ A Quiet Place ♡<span class="with">with God</span></div>
     <p>✿ A LITTLE SPACE FOR YOUR SOUL ✿</p>
   </div>
 </header>
+<div class="userbar"><span>♡ Signed in as <b id="who"></b></span><button class="link" onclick="logout()">Log out</button></div>
 
 <nav>
   <button class="nav-item active" onclick="showPage('home',this)">
@@ -62,7 +65,7 @@
     </svg>
   </button>
   <button class="nav-item" onclick="showPage('calendar',this)">
-    Schedule
+    Devotions
     <svg viewBox="0 0 100 90">
       <rect x="10" y="18" width="80" height="65" rx="7" fill="#fff0f6" stroke="#8d4561" stroke-width="3"/>
       <rect x="10" y="18" width="80" height="18" rx="5" fill="#f58ab3"/>
@@ -148,22 +151,26 @@
   </section>
 
   <section class="page" id="calendar">
-    <h2>🗓 My Devotion Schedule</h2>
+    <h2>🗓 My Devotions</h2>
     <div class="panel">
-      <h3>My reading plan</h3>
+      <h3>My devotion</h3>
+      <label class="lbl">Date of my devotion</label>
       <input id="calendar1" type="date">
-      <input id="calendar2" placeholder="Today's Bible reading">
-      <textarea id="calendar3" placeholder="What would you like to study?"></textarea>
-      <button class="action" onclick="add('calendar')">Add to Schedule ♡</button>
+      <input id="calendar2" placeholder="Bible reading (example: John 3)">
+      <textarea id="calendar3" placeholder="What did God show you today?"></textarea>
+      <button class="action" onclick="add('calendar')">Save Devotion ♡</button>
       <p class="msg" id="msg-calendar"></p>
     </div>
+    <h3>Past devotions</h3>
     <div id="list-calendar"></div>
   </section>
 
   <section class="page" id="prayers">
     <h2>🙏 My Prayer Journal</h2>
     <div class="panel">
-      <h3>Prayer Requests</h3>
+      <h3>New prayer request</h3>
+      <label class="lbl">Date of this request</label>
+      <input id="prayers2" type="date">
       <textarea id="prayers1" placeholder="Dear God..."></textarea>
       <button class="action" onclick="add('prayers')">Save Prayer ♡</button>
       <p class="msg" id="msg-prayers"></p>
@@ -178,11 +185,13 @@
     <h2>🎵 Worship Corner</h2>
     <div class="panel center">
       <h3>Songs for a quiet moment</h3>
-      <p>♡ Your favorite praise and worship songs ♡</p>
-      <input id="worship1" placeholder="Song or playlist name">
-      <input id="worship2" placeholder="Paste your playlist link here (https://...)">
-      <button class="action" onclick="add('worship')">Add Playlist</button>
+      <p>Paste a Spotify link and it plays right here ♡</p>
+      <input id="worship1" placeholder="Song or playlist name (optional)">
+      <input id="worship2" placeholder="Paste a Spotify link (https://open.spotify.com/...)">
+      <button class="action" onclick="add('worship')">Add Song</button>
       <p class="msg" id="msg-worship"></p>
+      <input id="sp-q" placeholder="Don't have a link? Type a song title">
+      <button class="mini" onclick="spotifySearch()">Search on Spotify</button>
     </div>
     <div id="list-worship"></div>
   </section>
@@ -201,26 +210,41 @@
   <section class="page" id="settings">
     <h2>⚙️ Settings</h2>
     <div class="panel">
-      <h3>Profile</h3>
-      <p>Signed in as <b id="set-name"></b></p>
-      <button class="action" onclick="logout()">Log out / switch user</button>
-      <button class="mini" onclick="deleteProfile()">Delete this profile</button>
+      <h3>My profile</h3>
+      <label class="lbl">Name shown in the site</label>
+      <input id="set-display" maxlength="30">
+      <button class="action" onclick="saveName()">Save name</button>
+      <p class="msg" id="msg-name"></p>
+      <label class="lbl">Username (used to log in)</label>
+      <input id="set-user" maxlength="20" autocomplete="off">
+      <button class="action" onclick="saveUsername()">Save username</button>
+      <p class="msg" id="msg-user"></p>
     </div>
     <div class="panel">
       <h3>Passcode</h3>
-      <p id="lock-status"></p>
+      <input id="pass-cur" type="password" placeholder="Current passcode" autocomplete="current-password">
       <input id="pass1" type="password" placeholder="New passcode (4+ characters)" autocomplete="new-password">
-      <button class="action" id="set-pass-btn" onclick="setPass()">Set passcode</button>
-      <button class="mini" id="rm-pass" onclick="removePass()" hidden>Remove passcode</button>
+      <button class="action" onclick="changePass()">Change passcode</button>
       <p class="msg" id="msg-pass"></p>
+    </div>
+    <div class="panel">
+      <h3>Colors &amp; theme</h3>
+      <p>Pick any color. The whole site, including the login page, follows it.</p>
+      <input type="color" id="theme-color" value="#f58ab3" oninput="setTheme()">
+      <div id="swatches"></div>
+      <label><input type="checkbox" id="theme-dark" onchange="setTheme()"> Dark mode</label>
+      <button class="mini" onclick="resetTheme()">Back to pink</button>
     </div>
     <div class="panel">
       <h3>Bible version</h3>
       <select id="ver" onchange="setVersion(this.value)">
         <option value="KJV">KJV (shows the verse text)</option>
         <option value="NIV">NIV (opens the passage to read)</option>
+        <option value="ESV">ESV (opens the passage to read)</option>
+        <option value="NLT">NLT (opens the passage to read)</option>
+        <option value="NKJV">NKJV (opens the passage to read)</option>
       </select>
-      <p style="font-size:13px;margin:0">The NIV is copyrighted, so with NIV the site shows the reference and opens the passage on BibleGateway.</p>
+      <p style="font-size:13px;margin:0">Only the KJV is free to show in full. For the others the site shows the reference and opens it on BibleGateway.</p>
     </div>
     <div class="panel">
       <h3>Backup</h3>
@@ -231,11 +255,15 @@
       <p class="msg" id="msg-data"></p>
       <p id="storage-info" style="font-size:13px;margin:0"></p>
     </div>
+    <div class="panel center">
+      <button class="action" onclick="logout()">Log out / switch account</button>
+      <button class="mini" onclick="deleteProfile()">Delete this account</button>
+    </div>
   </section>
 </main>
 <footer>Made with ♡, faith, and a little bit of pink 🌸</footer>
 </div>
 
-<script src="js/app.js"></script>
+<script src="js/app.js?v=3"></script>
 </body>
 </html>
