@@ -42,7 +42,7 @@ footer{padding:20px 8px;text-align:center;font:600 13px 'Fredoka',sans-serif;col
 .mini:hover{background:#f7c1d5}
 .empty{text-align:center;opacity:.7;margin:10px 0 0}
 .msg{color:#c34f80;font:600 13px 'Fredoka',sans-serif;margin:8px 0 0;min-height:1em}
-@media(max-width:560px){body{padding:8px 4px}header{min-height:170px}nav{grid-template-columns:repeat(4,1fr)}.nav-item svg{height:65px}main{margin:0 8px;padding:12px}}
+@media(max-width:560px){body{padding:8px 4px}header{min-height:170px}nav{grid-template-columns:repeat(7,1fr);gap:2px;padding:10px 3px 12px}.nav-item{font-size:9px;line-height:1.1}.nav-item svg{height:34px;margin-top:3px}main{margin:0 8px;padding:12px}}
 
 /* Passcode screen and small helpers */
 [hidden]{display:none!important}
@@ -53,9 +53,41 @@ html.locked .site{display:none}
 .lockbox{width:100%;max-width:340px;text-align:center;background:white;border:3px dashed #df6e9b;border-radius:20px;padding:20px}
 
 /* Profiles and settings */
-.link{border:0;background:none;color:#c34f80;font:600 13px 'Fredoka',sans-serif;text-decoration:underline;cursor:pointer}
+.link{border:0;background:#fbd9e7;color:#a8466f;padding:8px 16px;border-radius:20px;font:600 13px 'Fredoka',sans-serif;cursor:pointer}
+.link:hover{background:#f7c1d5}
 a.mini{display:inline-block;margin:4px;padding:9px 15px;font-size:13px;text-decoration:none}
 .panel .mini{margin:4px}
 
 /* "with God" is part of the headline */
 .logo .with{display:block;font-size:.8em;line-height:1.1;margin-top:2px}
+.nav-item{min-width:0}
+.lock-name{margin:4px 0 8px;font:700 22px 'Fredoka',sans-serif;color:#f47da9;text-shadow:1px 2px #b94776;line-height:1.2}
+.item iframe{display:block;width:100%;height:152px;border:0;border-radius:12px;margin-top:8px}
+
+/* Round 2: one straight row of smaller icons, userbar, new controls */
+nav{grid-template-columns:repeat(7,1fr);gap:2px;padding:10px 4px 14px}
+.nav-item{font-size:clamp(9px,1.7vw,16px);line-height:1.1;min-width:0}
+.nav-item svg{width:min(100%,70px);height:clamp(36px,7vw,70px)}
+.userbar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 14px;background:#fff0f6;color:#9d4268;font:600 13px 'Fredoka',sans-serif}
+.link{border:0;background:#fbd9e7;color:#a8466f;border-radius:20px;padding:8px 16px;font:600 13px 'Fredoka',sans-serif;cursor:pointer}
+.link:hover{background:#f7c1d5}
+.userbar .link{padding:3px 12px}
+.lbl{display:block;font:600 13px 'Fredoka',sans-serif;color:#d65e8e}
+input[type=color]{display:inline-block;width:90px;height:46px;padding:2px;cursor:pointer}
+input[type=checkbox]{display:inline-block;width:auto;margin:0 6px 0 0}
+input.mini-date{display:inline-block;width:auto;margin:0 6px;padding:4px 8px}
+#swatches{margin:4px 0 10px}
+#swatches button{width:30px;height:30px;margin:3px;border:2px solid #fff;border-radius:50%;box-shadow:0 0 0 1px #8d4561;cursor:pointer}
+.sp{display:block;width:100%;border:0;border-radius:12px;margin-top:8px}
+.item.done p{opacity:1;text-decoration:none}
+.item.done h4::after{content:none}
+html.dark body{background-color:#241820;background-image:none;--ink:#f3d9e4}
+html.dark main,html.dark .lockbox,html.dark .item{background:#2d1d26}
+html.dark #lock{background:#241820}
+html.dark .panel,html.dark .home-welcome{background:#382430;border-color:#6d3f55}
+html.dark .item{border-color:#6d3f55}
+html.dark input,html.dark textarea,html.dark select{background:#241820;color:#f3d9e4;border-color:#6d3f55}
+html.dark h3,html.dark .item h4,html.dark .lbl{color:#ffb3cf}
+html.dark footer,html.dark p{color:#f3d9e4}
+html.dark .mini,html.dark .link{background:#4a2c3b;color:#ffd1e2}
+html.dark .userbar{background:#382430;color:#f3d9e4}
